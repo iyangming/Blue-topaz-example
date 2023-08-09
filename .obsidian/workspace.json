@@ -4,20 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "5e81ee842a136b28",
+        "id": "6252f07fcb4a683a",
         "type": "tabs",
         "children": [
           {
-            "id": "fc371ae36bc5eac7",
+            "id": "2c24f388d1cc0639",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "00-Tips/如何导出dataview表格 或者普通表格成csv格式？.md",
-                "mode": "preview",
-                "backlinks": false,
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -59,18 +54,18 @@
             }
           },
           {
-            "id": "3d21402f76dc34c3",
+            "id": "f1f1e567e3ed74af",
             "type": "leaf",
             "state": {
-              "type": "starred",
+              "type": "recent-files",
               "state": {}
             }
           },
           {
-            "id": "fca5b26d7aef0c07",
+            "id": "ab656b6b9b9e003c",
             "type": "leaf",
             "state": {
-              "type": "file-tree-view",
+              "type": "bookmarks",
               "state": {}
             }
           }
@@ -78,7 +73,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 255
+    "width": 539.5
   },
   "right": {
     "id": "4e390742ffc29613",
@@ -101,9 +96,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "00-Tips/如何导出dataview表格 或者普通表格成csv格式？.md"
-              }
+              "state": {}
             }
           },
           {
@@ -114,6 +107,33 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "0e17250dd667bf72",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "b4c2229f3123c4ba",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
               }
             }
           }
@@ -141,47 +161,48 @@
       "obsidian-memos:Memos": false
     }
   },
-  "active": "fc371ae36bc5eac7",
+  "active": "2c24f388d1cc0639",
   "lastOpenFiles": [
-    "00-Tips/配色分享monokai pro 配色.md",
-    "00-Tips/魔方配色设置说明.md",
-    "00-Tips/00-Tips.md",
+    "88-Template/88-Template.md",
+    "88-Template/🎵Music.md",
+    "30-Reading/孤味.md",
+    "40-Booknote/40-Booknote.md",
+    "77-Example/timeline callout效果.md",
+    "77-Example/obsidian Roundup Newsletter.md",
+    "77-Example/ob提示框(callout)样式展示.md",
+    "77-Example/MD表格悬浮编辑测试.md",
+    "77-Example/example database.md",
+    "77-Example/◾ TableExample/03 - FlatBlue.md",
+    "77-Example/◾ TableExample/02 - PurpleRed.md",
+    "77-Example/◾ TableExample/01 - Default Table.md",
+    "77-Example/多彩高亮（三种语法）.md",
+    "77-Example/◾ Dataview相关实例/列出含有指定关键词的出链.md",
+    "77-Example/◾ Dataview相关实例/获取最近打开的文件列表.md",
+    "77-Example/◾ Dataview相关实例/卡片视图 展示笔记.md",
+    "77-Example/◾ Dataview相关实例/按小标题汇总内容.md",
+    "77-Example/◾ Dataview相关实例/插件信息展示.md",
+    "77-Example/◾ Dataview相关实例/◾ Dataview相关实例.md",
+    "77-Example/◾ Echarts/echarts-treemap.md",
+    "77-Example/◾ Echarts/echarts-词云.md",
+    "77-Example/◾ Echarts/echarts 示例教程.md",
+    "77-Example/◾ Echarts/echart-获取当前文章热词.md",
+    "77-Example/◾ Echarts/chinese_stopwords.md",
+    "50-Inbox/50-Inbox.md",
+    "50-Inbox/Website/Website.md",
+    "10-Help/css基础教学.pdf",
+    "未命名 2.canvas",
+    "未命名 1.canvas",
+    "未命名.canvas",
     "60-Canvas/示例库结构一览.canvas",
-    "00-Tips/🥑Blue Topaz Themes Tips.md",
     "60-Canvas/Assets/1505323928_home_.png",
-    "60-Canvas/主页说明.md",
     "60-Canvas/canvas白板介绍_middle.canvas",
     "60-Canvas/Formatting_Cheatsheet.canvas",
     "60-Canvas/Home_middle.canvas",
     "60-Canvas/TIPS.canvas",
     "60-Canvas/画板主页.canvas",
     "60-Canvas/代码块相关样式_middle.canvas",
-    "从这开始.md",
-    "README.md",
-    "Changlog.md",
-    "主题截图分享.md",
     "99-Attachment/banner/33.jpg",
     "99-Attachment/banner/66.jpg",
-    "88-Template/彩色时钟.md",
-    "20-Diary/任务看板.md",
-    "88-Template/常用工具.md",
-    "Demo Note.md",
-    "20-Diary/日记统计.md",
-    "20-Diary/2022-10-24.md",
-    "20-Diary/2022-10-14.md",
-    "20-Diary/2022-10-11.md",
-    "20-Diary/2022-10-09.md",
-    "20-Diary/2022-08-22.md",
-    "20-Diary/2022-08-17.md",
-    "20-Diary/2022-08-10.md",
-    "20-Diary/2022-08-09.md",
-    "20-Diary/2022-04-13.md",
-    "20-Diary/2022-04-07.md",
-    "20-Diary/2022-04-08.md",
-    "20-Diary/2022-01-10.md",
-    "未命名 3.canvas",
-    "未命名 2.canvas",
-    "未命名 1.canvas",
     "88-Template/script/askChat.js",
     "88-Template/script/askChat(2).js",
     "88-Template/script/copyChat.js"

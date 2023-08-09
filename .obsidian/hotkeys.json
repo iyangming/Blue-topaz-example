@@ -274,5 +274,13 @@
       ],
       "key": "F"
     }
+  ],
+  "app:delete-file": [
+    {
+      "modifiers": [
+        "Ctrl"
+      ],
+      "key": "Backspace"
+    }
   ]
 }
