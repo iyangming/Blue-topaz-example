@@ -120,6 +120,14 @@
         {
           "id": "tab-switcher",
           "name": "Tab Switcher"
+        },
+        {
+          "id": "obsidian-excalidraw-plugin",
+          "name": "Excalidraw"
+        },
+        {
+          "id": "obsidian-git",
+          "name": "Obsidian Git"
         }
       ],
       "groupIds": [],

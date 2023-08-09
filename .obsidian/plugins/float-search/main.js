@@ -408,7 +408,7 @@ var EmbeddedView = class extends nosuper(import_obsidian.HoverPopover) {
   }
 };
 
-// node_modules/.pnpm/monkey-around@2.3.0/node_modules/monkey-around/mjs/index.js
+// node_modules/monkey-around/mjs/index.js
 function around(obj, factories) {
   const removers = Object.keys(factories).map((key) => around1(obj, key, factories[key]));
   return removers.length === 1 ? removers[0] : function() {
@@ -460,7 +460,10 @@ var FloatSearchPlugin = class extends import_obsidian2.Plugin {
   async onload() {
     this.patchWorkspace();
     this.patchWorkspaceLeaf();
+    this.registerObsidianURIHandler();
     this.registerObsidianCommands();
+    this.registerEditorMenuHandler();
+    this.registerContextMenuHandler();
     this.addRibbonIcon("search", "Search Obsidian In Modal", () => {
       this.modal = new FloatSearchModal((state) => {
         this.state = state;
@@ -590,7 +593,7 @@ var FloatSearchPlugin = class extends import_obsidian2.Plugin {
       }
     }));
   }
-  registerObsidianCommands() {
+  registerObsidianURIHandler() {
     this.registerObsidianProtocolHandler("fs", (path) => {
       this.modal = new FloatSearchModal((state) => {
         this.state = state;
@@ -598,24 +601,8 @@ var FloatSearchPlugin = class extends import_obsidian2.Plugin {
       }, this.app, this, { query: path.query, current: false });
       this.modal.open();
     });
-    this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
-      if (!editor) {
-        return;
-      }
-      if (editor.getSelection().length === 0) {
-        return;
-      }
-      const selection = editor.getSelection();
-      menu.addItem((item) => {
-        item.setTitle('Search "' + selection + '"').setIcon("search").onClick(() => {
-          this.modal = new FloatSearchModal((state) => {
-            this.state = state;
-            this.applySettingsUpdate();
-          }, this.app, this, { query: selection, current: false });
-          this.modal.open();
-        });
-      });
-    }));
+  }
+  registerObsidianCommands() {
     this.addCommand({
       id: "search-obsidian-globally",
       name: "Search Obsidian Globally",
@@ -637,33 +624,117 @@ var FloatSearchPlugin = class extends import_obsidian2.Plugin {
       }
     });
     this.addCommand({
-      id: "search-in-current-file",
-      name: "Search In Current File",
-      callback: () => {
+      id: "search-in-backlink",
+      name: "Search In Backlink Of Current File",
+      checkCallback: (checking) => {
         const activeLeaf = this.app.workspace.activeLeaf;
         if (!activeLeaf)
           return;
         const viewType = activeLeaf.view.getViewType();
-        if (viewType !== "markdown" && viewType !== "canvas") {
-          new import_obsidian2.Notice("This command only works in markdown and canvas files.", 3e3);
-          return;
+        if (viewType === "markdown" || viewType === "canvas") {
+          if (!checking) {
+            const currentFile = activeLeaf.view.file;
+            this.modal = new FloatSearchModal((state) => {
+              this.state = state;
+              this.applySettingsUpdate();
+            }, this.app, this, { ...this.state, query: " /\\[\\[" + (currentFile.extension === "canvas" ? currentFile.name : currentFile.basename) + "(\\|[^\\]]*)?\\]\\]/", current: true });
+            this.modal.open();
+          }
+          return true;
         }
-        const currentFile = activeLeaf.view.file;
-        this.modal = new FloatSearchModal((state) => {
-          this.state = state;
-          this.applySettingsUpdate();
-        }, this.app, this, { ...this.state, query: " path:" + currentFile.path, current: true });
-        this.modal.open();
+      }
+    });
+    this.addCommand({
+      id: "search-in-current-file",
+      name: "Search In Current File",
+      checkCallback: (checking) => {
+        const activeLeaf = this.app.workspace.activeLeaf;
+        if (!activeLeaf)
+          return;
+        const viewType = activeLeaf.view.getViewType();
+        if (viewType === "markdown" || viewType === "canvas") {
+          if (!checking) {
+            const currentFile = activeLeaf.view.file;
+            this.modal = new FloatSearchModal((state) => {
+              this.state = state;
+              this.applySettingsUpdate();
+            }, this.app, this, { ...this.state, query: " path:" + currentFile.path, current: true });
+            this.modal.open();
+          }
+          return true;
+        }
+      }
+    });
+    this.addCommand({
+      id: "open-search-view",
+      name: "Open Search View",
+      callback: async () => {
+        const leaf = app.workspace.getLeaf();
+        leaf.setPinned(true);
+        await leaf.setViewState({
+          type: "search"
+        });
       }
     });
   }
+  registerEditorMenuHandler() {
+    this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
+      if (!editor) {
+        return;
+      }
+      if (editor.getSelection().length === 0) {
+        return;
+      }
+      const selection = editor.getSelection().trim();
+      let searchWord = selection;
+      if (selection.length > 8) {
+        searchWord = selection.substring(0, 3) + "..." + selection.substring(selection.length - 3, selection.length);
+      } else {
+        searchWord = selection;
+      }
+      menu.addItem((item) => {
+        item.setTitle('Search "' + searchWord + '" in Float Search').setIcon("search").onClick(() => {
+          this.modal = new FloatSearchModal((state) => {
+            this.state = state;
+            this.applySettingsUpdate();
+          }, this.app, this, { query: selection, current: false });
+          this.modal.open();
+        });
+      });
+    }));
+  }
+  registerContextMenuHandler() {
+    this.registerEvent(this.app.workspace.on("file-menu", (menu, file, source, leaf) => {
+      const popover = leaf ? EmbeddedView.forLeaf(leaf) : void 0;
+      if (file instanceof import_obsidian2.TFile && !popover && !leaf) {
+        menu.addItem((item) => {
+          var _a2, _b2;
+          (_b2 = (_a2 = item.setIcon("popup-open").setTitle("Open in Float Preview").onClick(async () => {
+            if (this.modal) {
+              await this.modal.initFileView(file, void 0);
+              return;
+            }
+            this.modal = new FloatSearchModal((state) => {
+              this.state = state;
+              this.applySettingsUpdate();
+            }, this.app, this, { query: "", current: false });
+            this.modal.open();
+            setTimeout(async () => {
+              await this.modal.initFileView(file, void 0);
+            }, 20);
+          })).setSection) == null ? void 0 : _b2.call(_a2, "open");
+        });
+      }
+    }));
+  }
 };
 var FloatSearchModal = class extends import_obsidian2.Modal {
-  constructor(cb, app2, plugin, state) {
+  constructor(cb, app2, plugin, state, viewType = "search") {
     super(app2);
     this.plugin = plugin;
     this.cb = cb;
     this.state = state;
+    this.viewType = viewType;
   }
   async onOpen() {
     const { contentEl, containerEl, modalEl } = this;
@@ -671,7 +742,7 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
     this.instructionsEl = modalEl.createDiv({ cls: "float-search-modal-instructions" });
     this.initInstructions(this.instructionsEl);
     this.initCss(contentEl, modalEl, containerEl);
-    await this.initSearchView(this.searchCtnEl);
+    await this.initSearchView(this.searchCtnEl, this.viewType);
     this.initInput();
     this.initContent();
   }
@@ -727,7 +798,7 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
     modalEl.classList.add("float-search-modal");
     containerEl.classList.add("float-search-modal-container");
   }
-  async initSearchView(contentEl) {
+  async initSearchView(contentEl, viewType) {
     const [createdLeaf, embeddedView] = spawnLeafView(this.plugin, contentEl);
     this.searchLeaf = createdLeaf;
     this.searchEmbeddedView = embeddedView;
@@ -736,9 +807,9 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
       type: "search"
     });
     setTimeout(async () => {
-      var _a2, _b2, _c2, _d2, _e;
+      var _a2, _b2, _c2;
       await this.searchLeaf.view.setState(this.state, true);
-      ((_a2 = this.state) == null ? void 0 : _a2.current) ? this.searchLeaf.view.searchComponent.inputEl.setSelectionRange(0, 0) : this.searchLeaf.view.searchComponent.inputEl.setSelectionRange((_c2 = (_b2 = this.state) == null ? void 0 : _b2.query) == null ? void 0 : _c2.length, (_e = (_d2 = this.state) == null ? void 0 : _d2.query) == null ? void 0 : _e.length);
+      ((_a2 = this.state) == null ? void 0 : _a2.current) ? this.searchLeaf.view.searchComponent.inputEl.setSelectionRange(0, 0) : this.searchLeaf.view.searchComponent.inputEl.setSelectionRange(0, (_c2 = (_b2 = this.state) == null ? void 0 : _b2.query) == null ? void 0 : _c2.length);
     }, 0);
     return;
   }
@@ -850,6 +921,9 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
       let targetElement = e.target;
       if (e.altKey || !this.fileLeaf) {
         while (targetElement) {
+          if (targetElement.classList.contains("tree-item-icon")) {
+            break;
+          }
           if (targetElement.classList.contains("tree-item")) {
             this.close();
             break;
@@ -890,7 +964,7 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
         active: false,
         eState: state
       });
-      if (((_b2 = (_a2 = this.fileState) == null ? void 0 : _a2.match) == null ? void 0 : _b2.matches[0]) === ((_c2 = state.match) == null ? void 0 : _c2.matches[0]) && state && this.fileState) {
+      if (((_b2 = (_a2 = this.fileState) == null ? void 0 : _a2.match) == null ? void 0 : _b2.matches[0]) === ((_c2 = state == null ? void 0 : state.match) == null ? void 0 : _c2.matches[0]) && state && this.fileState) {
         setTimeout(() => {
           if (this.fileLeaf) {
             app.workspace.setActiveLeaf(this.fileLeaf, {
@@ -921,6 +995,8 @@ var FloatSearchModal = class extends import_obsidian2.Modal {
         this.searchLeaf.view.searchComponent.inputEl.focus();
       }
     };
+    if (!this.fileEl)
+      return;
     const [createdLeaf, embeddedView] = spawnLeafView(this.plugin, this.fileEl);
     this.fileLeaf = createdLeaf;
     this.fileEmbeddedView = embeddedView;

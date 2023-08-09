@@ -1,7 +1,7 @@
 {
   "baseFontSize": 14,
   "theme": "moonstone",
-  "cssTheme": "Blue Topaz",
+  "cssTheme": "",
   "enabledCssSnippets": [
     "B - Heatmap",
     "【自定义】表格样式ableStyles",

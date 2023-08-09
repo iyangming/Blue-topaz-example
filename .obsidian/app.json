@@ -33,5 +33,6 @@
   "trashOption": "system",
   "vimMode": false,
   "showInlineTitle": false,
-  "mobilePullAction": "command-palette:open"
+  "mobilePullAction": "command-palette:open",
+  "promptDelete": false
 }
