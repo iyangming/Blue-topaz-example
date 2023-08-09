@@ -11,8 +11,13 @@
             "id": "2c24f388d1cc0639",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "从这开始.md",
+                "mode": "preview",
+                "backlinks": false,
+                "source": false
+              }
             }
           }
         ]
@@ -96,7 +101,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "从这开始.md"
+              }
             }
           },
           {
@@ -116,6 +123,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "从这开始.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -132,6 +140,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "从这开始.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
